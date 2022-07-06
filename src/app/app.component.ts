@@ -9,11 +9,12 @@ import {CustData} from './CustomerDataInterface'
 })
 export class AppComponent implements OnInit{
   title = 'customer-details';
+  showDetails=false;
   displayedColumns: string[] = ['name', 'email', 'phone', 'country','action'];
 
   todoValue:string="";
     tag:string="";
-    list: CustData[]=[];
+    data!: CustData;
     /*list: CustData[]=[{
       name:"Demo",
       email:"demo@example.com",
@@ -26,15 +27,30 @@ export class AppComponent implements OnInit{
     
   constructor(private http: HttpClient){}
   ngOnInit(){
+   this.getData();
+  }
+
+  getData(){
     this.http.get<any>('https://randomuser.me/api/').subscribe(data => {
 
-    if(data.info && data.info.results>0){
-      data.results.forEach((element: { name: { first: any; }; email: any; phone: any; location: { country: any; }; }) => {
-        this.list.push({name:element.name.first,email:element.email,phone:element.phone,country:element.location.country})
-      });
-      console.log("created data",this.list);
-    }
-      console.log(data);
-  })    
+      if(data.info && data.info.results>0){
+        data.results.forEach((element:CustData ) => {
+          this.data=element;
+        });
+        console.log("created data",this.data);
+      }
+        console.log(data);
+    })    
+  }
+  showDetailsNow(){
+    this.showDetails=true;
+  }
+  Refresh(){
+    
+    this.getData();
+    this.showDetails=false;
+  }
+  ShowLessDetailsNow(){
+    this.showDetails=false;
   }
 }
